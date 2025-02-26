@@ -31,13 +31,13 @@ function updateFormWithSheetData() {
   }
 
   // อัปเดตคำถามห้อง
-  updateQuestion(form, spreadsheetId, sheetNameroom, ws.getRange('E4').getValue().toString().trim());
+  updateQuestion(form, spreadsheetId, sheetNameroom, ws.getRange('D5').getValue().toString().trim());
 
   // อัปเดตคำถามประเภทปัญหา
-  updateQuestion(form, spreadsheetId, sheetNametype, ws.getRange('E5').getValue().toString().trim());
+  updateQuestion(form, spreadsheetId, sheetNametype, ws.getRange('D6').getValue().toString().trim());
 
   // อัปเดตคำถามเวลา
-  updateQuestion(form, spreadsheetId, sheetNametime, ws.getRange('E6').getValue().toString().trim());
+  updateQuestion(form, spreadsheetId, sheetNametime, ws.getRange('D7').getValue().toString().trim());
 }
 
 function updateQuestion(form, spreadsheetId, sheetName, questionTitle) {
