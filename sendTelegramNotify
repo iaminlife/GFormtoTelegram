@@ -1,0 +1,23 @@
+function sendTelegramNotify(message) {
+  var botToken = 'Token-ID';  // Replace with your Telegram bot token
+  var chatIds = ['Group-ID'];   // Replace with your Telegram chat ID(s)
+
+  for (var i = 0; i < chatIds.length; i++) {
+    var formData = {
+      'chat_id': chatIds[i],  // Chat ID of the user or group
+      'text': message         // Message to send
+    };
+    
+    var options = {
+      "method": "post",
+      "payload": formData
+    };
+
+    var url = "https://api.telegram.org/bot" + botToken + "/sendMessage";
+    UrlFetchApp.fetch(url, options);
+  
+  
+  }
+   // Utilities.sleep(500)
+  
+}
