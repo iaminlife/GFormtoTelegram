@@ -1,0 +1,28 @@
+function sendToTelegram(e) {
+
+  // ดึงข้อมูลจาก Google Form
+  const responses = e.values;
+  const timestamp = responses[0];
+  const room = responses[1];
+  const type = responses[2];
+  const issue = responses[3];
+  const date = responses[4];
+  const time = responses[5];
+  const remark = responses[6];
+
+
+
+  // สร้างข้อความสำหรับ Telegram
+  const message = `📝 **มีการส่งข้อมูลใหม่**\n\n` +
+                  `📅 ห้อง : ${room}\n` +
+                  `📣 ประเภท: ${type}\n` +
+                  `💬 ปัญหา/สาเหตุ: ${issue}\n` +
+                  `📆 วันที่นัดหมาย: ${date}\n` +
+                  `🕐 เวลา: ${time}\n` +
+                  `⚠️ หมายเหตุ: ${remark}\n`;
+
+  // ส่งข้อความไปยัง Telegram
+    sendTelegramNotify(message);
+    Logger.log("Sent Notify");
+
+}
