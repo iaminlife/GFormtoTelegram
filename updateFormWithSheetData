@@ -1,0 +1,93 @@
+function updateFormWithSheetData() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var ws = ss.getSheetByName('Setting'); // เลือกชีต Setting
+  
+  var spreadsheetId = ws.getRange('B2').getValue().toString().trim(); // ดึงค่า Spreadsheet ID
+  var sheetNameroom = ws.getRange('B5').getValue().toString().trim(); // ดึงค่าชื่อชีตห้อง
+  var sheetNametype = ws.getRange('B6').getValue().toString().trim(); // ดึงค่าชื่อชีตประเภทปัญหา
+  var sheetNametime = ws.getRange('B7').getValue().toString().trim(); // ดึงค่าชื่อชีตเวลา
+  var formId = ws.getRange('B3').getValue().toString().trim(); // ดึงค่า Form ID 
+
+  Logger.log("🔹 Spreadsheet ID: " + spreadsheetId);
+  Logger.log("🔹 Form ID: " + formId);
+
+  if (!formId || formId.length < 10) {
+    Logger.log("❌ Form ID ไม่ถูกต้อง");
+    return;
+  }
+
+  if (!spreadsheetId || spreadsheetId.length < 10) {
+    Logger.log("❌ Spreadsheet ID ไม่ถูกต้อง");
+    return;
+  }
+
+  var form;
+  try {
+    form = FormApp.openById(formId);
+    Logger.log("✅ เปิดฟอร์มสำเร็จ: " + form.getTitle());
+  } catch (e) {
+    Logger.log("🚨 ไม่สามารถเปิดฟอร์มได้: " + e.message);
+    return;
+  }
+
+  // อัปเดตคำถามห้อง
+  updateQuestion(form, spreadsheetId, sheetNameroom, ws.getRange('E4').getValue().toString().trim());
+
+  // อัปเดตคำถามประเภทปัญหา
+  updateQuestion(form, spreadsheetId, sheetNametype, ws.getRange('E5').getValue().toString().trim());
+
+  // อัปเดตคำถามเวลา
+  updateQuestion(form, spreadsheetId, sheetNametime, ws.getRange('E6').getValue().toString().trim());
+}
+
+function updateQuestion(form, spreadsheetId, sheetName, questionTitle) {
+  Logger.log("🔹 อัปเดตคำถาม: " + questionTitle + " จากชีต " + sheetName);
+  
+  var sheet;
+  try {
+    sheet = SpreadsheetApp.openById(spreadsheetId).getSheetByName(sheetName);
+  } catch (e) {
+    Logger.log("🚨 ไม่สามารถเปิดชีต " + sheetName + ": " + e.message);
+    return;
+  }
+
+  if (!sheet) {
+    Logger.log("❌ ไม่พบชีต: " + sheetName);
+    return;
+  }
+
+  var lastRow = sheet.getLastRow();
+  if (lastRow < 2) {
+    Logger.log("❌ ไม่มีข้อมูลในชีต: " + sheetName);
+    return;
+  }
+
+  var data = sheet.getRange(2, 1, lastRow - 1, 1).getValues();
+  var choices = data.flat().filter(choice => choice); // ตัดค่าที่ว่างออก
+
+  if (choices.length === 0) {
+    Logger.log("❌ ไม่มีตัวเลือกสำหรับคำถาม: " + questionTitle);
+    return;
+  }
+
+  // ตรวจสอบว่ามีคำถามนี้อยู่แล้วหรือไม่
+  var items = form.getItems(FormApp.ItemType.MULTIPLE_CHOICE);
+  var existingQuestion = items.find(item => item.getTitle() === questionTitle);
+
+  if (existingQuestion) {
+    existingQuestion.asMultipleChoiceItem().setChoiceValues(choices);
+    Logger.log("✅ อัปเดตตัวเลือกของคำถาม: " + questionTitle);
+  } else {
+    form.addMultipleChoiceItem().setTitle(questionTitle).setChoiceValues(choices);
+    Logger.log("✅ เพิ่มคำถามใหม่: " + questionTitle);
+  }
+}
+
+//=========================== MenuBar ===============================//
+function onOpen() {
+  let ui = SpreadsheetApp.getUi();
+  ui.createMenu('ตั้งค่าอัพเดทข้อมูล')
+    .addItem('อัพเดทข้อมูลไปกูเกิ้ลฟอร์ม', 'updateFormWithSheetData')
+    .addToUi();
+}
+//==================================================================//
