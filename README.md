@@ -2,7 +2,7 @@
 Google Apps Script for sending Google Form notifications to Telegram  
 
 ########################################  Create By AIN  ########################################
-####### 📌 promptpay: `0612566xxx`
+### 📌 promptpay: `0612566xxx`
 
 ## 🚀 ขั้นตอนการทำงาน  
 
