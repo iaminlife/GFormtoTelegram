@@ -1,11 +1,14 @@
 function sendTelegramNotify(message) {
-  var botToken = 'Token-ID';  // Replace with your Telegram bot token
-  var chatIds = ['Group-ID'];   // Replace with your Telegram chat ID(s)
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var ws = ss.getSheetByName('Setting');
+
+  var botToken = ws.getRange('B12').getValue().toString().trim();
+  var chatIds = ws.getRange('B13').getValue().toString().trim().split(','); // แยก chat ID เป็น array
 
   for (var i = 0; i < chatIds.length; i++) {
     var formData = {
-      'chat_id': chatIds[i],  // Chat ID of the user or group
-      'text': message         // Message to send
+      'chat_id': chatIds[i].trim(),  // แปลง chat_id เป็น string ที่สะอาด
+      'text': message
     };
     
     var options = {
@@ -15,9 +18,8 @@ function sendTelegramNotify(message) {
 
     var url = "https://api.telegram.org/bot" + botToken + "/sendMessage";
     UrlFetchApp.fetch(url, options);
-  
-  
   }
-   // Utilities.sleep(500)
-  
+
+  //Logger.log(botToken);
+  //Logger.log(chatIds);
 }
