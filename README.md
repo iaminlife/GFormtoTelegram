@@ -61,7 +61,42 @@ Google Apps Script for sending Google Form notifications to Telegram
 3️⃣ ข้อมูลใหม่จะอัปเดตบน **Google Form อัตโนมัติ**  
 
 ---
+
+## 🔹 **How to Create Telegram Bot**  
+📢 **สร้าง Telegram Bot เพื่อใช้แจ้งเตือนผ่าน Google Apps Script**  
+
+### 1️⃣ ค้นหาและสร้างบอท  
+🔹 เปิดแอป **Telegram** และค้นหาคำว่า **"BotFather"**  
+🔹 กดปุ่ม **START**  
+🔹 พิมพ์คำสั่ง **`/newbot`** และทำตามขั้นตอน  
+
+📌 **BotFather จะให้ Token สำหรับ API**  
+🔹 คัดลอก **Token** ไว้ใช้งาน  
+
+> ✅ **ตัวอย่าง Token:**  
+> ```
+> 421348836:AAFX6ycOyrLzyrzeVYIp_YvYXNbqh0QVY3o
+> ```
+
+📌 **ตัวอย่างคำสั่งจาก BotFather**  
+
+✅ **ตัวอย่างที่ถูกต้อง**  
+> ```
+> https://api.telegram.org/bot$TOKENID/getUpdates
+> ```
+---
+
+### 2️⃣ ตรวจสอบ Chat ID  
+📌 ใช้ API ด้านล่าง เพื่อตรวจสอบ **Chat ID** ของคุณ  
+🔹 แก้ไข `$TOKENID` เป็น Token ของคุณ
+> ```
+> https://api.telegram.org/bot$TOKENID/sendMessage?chat_id=CHAT_ID&text=Hello+Telegram
+> ```
+📌 ผลลัพธ์ที่ได้
+### ✅ บอทจะส่งข้อความ "Hello Telegram" ไปยัง Telegram ของคุณ
+---
 promptpay: 
 
 
 🙏 ขอบคุณสำหรับการสนับสนุน! โปรเจกต์นี้เป็นโอเพ่นซอร์ส และทุกการช่วยเหลือจะช่วยให้สามารถพัฒนาต่อไปได้ 🚀
+---
