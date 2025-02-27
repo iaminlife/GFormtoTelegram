@@ -70,18 +70,35 @@ function updateQuestion(form, spreadsheetId, sheetName, questionTitle) {
     return;
   }
 
-  // ตรวจสอบว่ามีคำถามนี้อยู่แล้วหรือไม่
-  var items = form.getItems(FormApp.ItemType.MULTIPLE_CHOICE);
+  var items = form.getItems();
   var existingQuestion = items.find(item => item.getTitle() === questionTitle);
 
+  function clearChoices(item) {
+    try {
+      var choices = item.asListItem().getChoices();
+      if (choices.length > 0) {
+        item.asListItem().setChoiceValues([]);
+      }
+    } catch (e) {
+      Logger.log("🚨 ไม่มีตัวเลือกในคำถามนี้: " + item.getTitle());
+    }
+  }
+
   if (existingQuestion) {
-    existingQuestion.asMultipleChoiceItem().setChoiceValues(choices);
+    clearChoices(existingQuestion);
+    if (existingQuestion.getType() === FormApp.ItemType.LIST) {
+      existingQuestion.asListItem().setChoiceValues(choices);
+    } else if (existingQuestion.getType() === FormApp.ItemType.MULTIPLE_CHOICE) {
+      existingQuestion.asMultipleChoiceItem().setChoiceValues(choices);
+    }
     Logger.log("✅ อัปเดตตัวเลือกของคำถาม: " + questionTitle);
   } else {
-    form.addMultipleChoiceItem().setTitle(questionTitle).setChoiceValues(choices);
+    form.addListItem().setTitle(questionTitle).setChoiceValues(choices);
     Logger.log("✅ เพิ่มคำถามใหม่: " + questionTitle);
   }
 }
+
+
 
 //=========================== MenuBar ===============================//
 function onOpen() {
